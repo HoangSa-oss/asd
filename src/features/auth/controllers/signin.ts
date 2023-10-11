@@ -1,20 +1,20 @@
-import { joiValidation } from "src/shared/globals/decorators/job-validation.decorators";
 import { loginSchema } from "../schemes/signin";
 import { IAuthDocument } from "../interfaces/auth.interface";
-import  {authService} from "src/shared/service/db/auth.service";
-import { BadRequestError } from "src/shared/globals/helpers/error-handler";
-import { IResetPasswordParams, IUserDocument } from "src/features/user/interfaces/user.interface";
-import { userService } from "src/shared/service/db/user.service";
+import  {authService} from "@service/db/auth.service";
+import { userService } from "@service/db/user.service";
 import { Request,Response } from "express";
 import { config } from "src/config";
 import JWT from 'jsonwebtoken';
 import HTTP_STATUS from 'http-status-codes';
-import { mailTransport } from "src/shared/service/email/email.transport";
-import { forgotPasswordTemplate } from "src/shared/service/email/templates/forgot-password/forgot-password-template";
-import { emailQueue } from "src/shared/service/queue/email.queue";
+import { mailTransport } from "@service/emails/email.transport";
+import { forgotPasswordTemplate } from "@service/emails/templates/forgot-password/forgot-password-template";
+import { emailQueue } from "@service/queues/email.queue";
 import moment from "moment";
 import publicIP from 'ip'
-import { resetPasswordTemplate } from "src/shared/service/email/templates/reset-password/reset-password-template";
+import { resetPasswordTemplate } from "@service/emails/templates/reset-password/reset-password-template";
+import { joiValidation } from '@global/decorators/job-validation.decorators';
+import { BadRequestError } from "@global/helpers/error-handler";
+import { IUserDocument, IResetPasswordParams } from "@user/interfaces/user.interface";
 
 export class SignIn {
     @joiValidation(loginSchema)

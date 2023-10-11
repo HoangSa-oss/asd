@@ -1,19 +1,19 @@
-import { joiValidation } from "src/shared/globals/decorators/job-validation.decorators";
-import { emailSchema, passwordSchema } from "../schemes/password";
-import { Request,Response } from "express";
-import { IAuthDocument } from "../interfaces/auth.interface";
-import { authService } from "src/shared/service/db/auth.service";
-import { BadRequestError } from "src/shared/globals/helpers/error-handler";
-import crypto from 'crypto'
-import publicIP from 'ip'
+import { Request, Response } from 'express';
+import { config } from '@root/config';
+import moment from 'moment';
+import publicIP from 'ip';
+import HTTP_STATUS from 'http-status-codes';
+import { authService } from '@service/db/auth.service';
+import { IAuthDocument } from '@auth/interfaces/auth.interface';
+import { emailSchema, passwordSchema } from '@auth/schemes/password';
+import crypto from 'crypto';
+import { IResetPasswordParams } from '@user/interfaces/user.interface';
+import { BadRequestError } from '@global/helpers/error-handler';
+import { emailQueue } from '@service/queues/email.queue';
+import { joiValidation } from '@global/decorators/job-validation.decorators';
+import { forgotPasswordTemplate } from '@service/emails/templates/forgot-password/forgot-password-template';
+import { resetPasswordTemplate } from '@service/emails/templates/reset-password/reset-password-template';
 
-import { config } from "src/config";
-import { forgotPasswordTemplate } from "src/shared/service/email/templates/forgot-password/forgot-password-template";
-import { emailQueue } from "src/shared/service/queue/email.queue";
-import HTTP_STATUS from 'http-status-codes'
-import moment from "moment";
-import { IResetPasswordParams } from "src/features/user/interfaces/user.interface";
-import { resetPasswordTemplate } from "src/shared/service/email/templates/reset-password/reset-password-template";
 export class Password {
     @joiValidation(emailSchema)
     public async create(req:Request,res:Response):Promise<void>{

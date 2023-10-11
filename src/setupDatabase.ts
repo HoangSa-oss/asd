@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { config } from './config';
 import Logger from 'bunyan';
-import { redisConnect } from './shared/service/redis/redis.connection';
+import { redisConnect } from './shared/services/redis/redis.connection';
 const log:Logger = config.createLogger('database')
 
 export default () => {

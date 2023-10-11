@@ -1,26 +1,25 @@
 import { ObjectId } from "mongodb";
 import { Request,Response } from "express";
 import { signupSchema } from "../schemes/signup";
-import { joiValidation } from "src/shared/globals/decorators/job-validation.decorators";
 import { IAuthDocument, ISignUpData } from "../interfaces/auth.interface";
-import { authService } from "src/shared/service/db/auth.service";
-import { check } from "prettier";
-import { BadRequestError } from "src/shared/globals/helpers/error-handler";
-import { Helpers } from "src/shared/globals/helpers/helpers";
+import { authService } from "@service/db/auth.service";
 import HTTP_STATUS from 'http-status-codes';
-import { UserCache } from "src/shared/service/redis/user.cache";
-import { IUserDocument } from "src/features/user/interfaces/user.interface";
+import { UserCache } from "@service/redis/user.cache";
 import { omit } from "lodash";
-import { authQueue } from "src/shared/service/queue/auth.queue";
-import { userQueue } from "src/shared/service/queue/user.queue";
+import { authQueue } from "@service/queues/auth.queue";
+import { userQueue } from "@service/queues/user.queue";
 import JWT from 'jsonwebtoken';
-import { config } from "src/config";
+import { config } from "@root/config";
+import { joiValidation } from "@global/decorators/job-validation.decorators";
+import { BadRequestError } from "@global/helpers/error-handler";
+import { Helpers } from "@global/helpers/helpers";
+import { IUserDocument } from "@user/interfaces/user.interface";
 const userCache:UserCache = new UserCache()
 export class SignUp {
     @joiValidation(signupSchema)
     public async create(req:Request,res:Response):Promise<void>{
         const {username,email,password,avatarColor,avatarImage} = req.body
-        const checkIfUserExist:IAuthDocument = await authService.getUserByYsernameOrEmail(username,email)
+        const checkIfUserExist:IAuthDocument = await authService.getUserByUsernameOrEmail(username,email) 
         if(checkIfUserExist){
             throw new BadRequestError('Invalid credentials')
         }

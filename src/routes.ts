@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { authRoutes } from "./features/auth/routes/authRoutes";
-import { serverAdapter } from "./shared/service/queue/base.queue";
+import { serverAdapter } from "./shared/services/queues/base.queue";
 import { currentUserRoutes } from "./features/auth/routes/currentRoutes";
 
 
